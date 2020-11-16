@@ -15,8 +15,8 @@ class ProductsOverview extends StatelessWidget {
       body: GridView.builder(
         itemBuilder: (ctx, index) {
           return InkWell(
-            splashColor: Theme.of(context).accentColor,
-            radius: 100,
+            splashColor: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(15),
             onTap: () {
               Navigator.of(context).pushNamed(ProductDetail.routeName,
                   arguments: products[index].id);
