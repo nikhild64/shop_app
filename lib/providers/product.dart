@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class Product {
+class Product with ChangeNotifier {
   final String id;
   final String title;
   final String description;
@@ -14,4 +14,9 @@ class Product {
       this.isFavourite = false,
       @required this.price,
       @required this.title});
+
+  void toggleFav() {
+    this.isFavourite = !this.isFavourite;
+    notifyListeners();
+  }
 }

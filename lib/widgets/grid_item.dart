@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart.dart';
+import '../providers/product.dart';
 
 class GridItem extends StatelessWidget {
-  final Product product;
+  /* final Product product;
   const GridItem({Key key, @required this.product}) : super(key: key);
-
+ */
+  /* final bool isFav;
+  GridItem({this.isFav});
+ */
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
+    final cart = Provider.of<Cart>(context);
     return GridTile(
       child: Image.network(
         product.imageUrl,
@@ -19,7 +26,9 @@ class GridItem extends StatelessWidget {
         width: double.infinity,
         child: GridTileBar(
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              cart.addToCart(product);
+            },
             icon: Icon(Icons.shopping_cart),
             color: Theme.of(context).accentColor,
           ),
@@ -34,8 +43,12 @@ class GridItem extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
-            icon: Icon(Icons.favorite),
-            onPressed: () {},
+            icon: product.isFavourite
+                ? Icon(Icons.favorite)
+                : Icon(Icons.favorite_border),
+            onPressed: () {
+              product.toggleFav();
+            },
             color: Theme.of(context).accentColor,
           ),
         ),
