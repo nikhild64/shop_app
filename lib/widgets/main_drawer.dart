@@ -9,7 +9,15 @@ class MainDrawer extends StatelessWidget {
       child: Column(
         children: [
           AppBar(
-            title: Text('Menu'),
+            leading: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.supervised_user_circle,
+                color: Theme.of(context).accentColor,
+                size: 50,
+              ),
+            ),
+            title: Text('Hi User,'),
             automaticallyImplyLeading: false,
           ),
           Divider(),
