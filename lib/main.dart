@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
           title: 'MyShop',
           theme: ThemeData(
             canvasColor: Colors.grey.shade200,
-            primarySwatch: Colors.blueGrey,
+            primarySwatch: Colors.purple,
             accentColor: Colors.orangeAccent.shade700,
           ),
           initialRoute: '/',
