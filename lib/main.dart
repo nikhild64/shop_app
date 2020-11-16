@@ -25,10 +25,15 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (ctx) => Order())
         ],
         child: MaterialApp(
+          darkTheme: ThemeData(
+            canvasColor: Colors.grey.shade200,
+            primarySwatch: Colors.blueGrey,
+            accentColor: Colors.orangeAccent.shade700,
+          ),
           title: 'MyShop',
           theme: ThemeData(
             canvasColor: Colors.grey.shade200,
-            primarySwatch: Colors.purple,
+            primarySwatch: Colors.blueGrey,
             accentColor: Colors.orangeAccent.shade700,
           ),
           initialRoute: '/',
