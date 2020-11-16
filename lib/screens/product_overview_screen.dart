@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/models/product.dart';
+import '../widgets/grid_item.dart';
 import '../providers/products.dart';
 import './product_details_screen.dart';
 
@@ -23,40 +25,7 @@ class ProductsOverview extends StatelessWidget {
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),
-              child: GridTile(
-                child: Image.network(
-                  products[index].imageUrl,
-                  fit: BoxFit.cover,
-                ),
-                footer: Container(
-                  alignment: Alignment.center,
-                  height: 30,
-                  color: Colors.black87,
-                  width: double.infinity,
-                  child: GridTileBar(
-                    leading: IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.shopping_cart),
-                      color: Theme.of(context).accentColor,
-                    ),
-                    title: Text(
-                      products[index].title,
-                      softWrap: true,
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.favorite),
-                      onPressed: () {},
-                      color: Theme.of(context).accentColor,
-                    ),
-                  ),
-                ),
-              ),
+              child: GridItem(product: products[index]),
             ),
           );
         },

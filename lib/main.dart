@@ -15,8 +15,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'MyShop',
         theme: ThemeData(
+          canvasColor: Colors.grey.shade200,
           primarySwatch: Colors.purple,
-          accentColor: Colors.orange,
+          accentColor: Colors.orangeAccent.shade700,
         ),
         initialRoute: '/',
         routes: {
