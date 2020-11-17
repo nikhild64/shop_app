@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app/providers/product.dart';
+import 'package:shop_app/providers/products.dart';
+import 'package:shop_app/screens/edit_product_screen.dart';
 
 class ManageProductItem extends StatelessWidget {
   final Product product;
@@ -21,11 +24,41 @@ class ManageProductItem extends StatelessWidget {
                       Icons.edit,
                       color: Theme.of(context).primaryColor,
                     ),
-                    onPressed: () {}),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(EditProduct.routeName, arguments: product);
+                    }),
                 IconButton(
                     icon:
                         Icon(Icons.delete, color: Theme.of(context).errorColor),
-                    onPressed: () {})
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (ctx) {
+                            return AlertDialog(
+                              title: Text('Are you sure?'),
+                              content: Text(
+                                  'This will delte the product permanetly'),
+                              actions: [
+                                FlatButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                    },
+                                    child: Text('Yes')),
+                                FlatButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: Text('No'))
+                              ],
+                            );
+                          }).then((value) {
+                        if (value) {
+                          Provider.of<Products>(context, listen: false)
+                              .deleteProduct(product.id);
+                        }
+                      });
+                    })
               ],
             ),
           ),
