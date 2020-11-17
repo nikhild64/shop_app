@@ -41,9 +41,7 @@ class Cart with ChangeNotifier {
 
   void removeLatest(Product product) {
     if (_items.containsKey(product.id)) {
-      print('key present');
       if (_items[product.id].quantity > 1) {
-        print('_items[product.id].quantity > 1');
         _items.updateAll((key, value) => CardItem(
               id: value.id,
               price: value.price,
@@ -51,7 +49,6 @@ class Cart with ChangeNotifier {
               title: value.title,
             ));
       } else if (_items[product.id].quantity == 1) {
-        print('_items[product.id].quantity == 1');
         _items.remove(product.id);
       }
     }

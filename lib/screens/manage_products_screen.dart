@@ -30,11 +30,21 @@ class ManageProductsScreen extends StatelessWidget {
         ],
         title: Text('Manage Products'),
       ),
-      body: ListView.builder(
-          itemCount: products.length,
-          itemBuilder: (ctx, index) {
-            return ManageProductItem(product: products[index]);
-          }),
+      body: RefreshIndicator(
+        onRefresh: () {
+          return Provider.of<Products>(context, listen: false)
+              .getAndSetProducts()
+              .then((value) => print('value'))
+              .catchError((error) {
+            print(error);
+          });
+        },
+        child: ListView.builder(
+            itemCount: products.length,
+            itemBuilder: (ctx, index) {
+              return ManageProductItem(product: products[index]);
+            }),
+      ),
     );
   }
 }

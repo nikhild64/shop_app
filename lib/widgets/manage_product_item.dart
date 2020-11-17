@@ -9,6 +9,7 @@ class ManageProductItem extends StatelessWidget {
   ManageProductItem({this.product});
   @override
   Widget build(BuildContext context) {
+    final scaffold = Scaffold.of(context);
     return Column(
       children: [
         ListTile(
@@ -31,7 +32,7 @@ class ManageProductItem extends StatelessWidget {
                 IconButton(
                     icon:
                         Icon(Icons.delete, color: Theme.of(context).errorColor),
-                    onPressed: () {
+                    onPressed: () async {
                       showDialog(
                           context: context,
                           builder: (ctx) {
@@ -52,10 +53,15 @@ class ManageProductItem extends StatelessWidget {
                                     child: Text('No'))
                               ],
                             );
-                          }).then((value) {
+                          }).then((value) async {
                         if (value) {
-                          Provider.of<Products>(context, listen: false)
-                              .deleteProduct(product.id);
+                          try {
+                            await Provider.of<Products>(context, listen: false)
+                                .deleteProduct(product.id);
+                          } catch (error) {
+                            scaffold
+                                .showSnackBar(SnackBar(content: Text('error')));
+                          }
                         }
                       });
                     })

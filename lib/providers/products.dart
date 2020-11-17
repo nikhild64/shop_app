@@ -1,9 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shop_app/models/http_exception.dart';
 import 'product.dart';
+import 'package:http/http.dart' as http;
+import '../models/urlData.dart' as urlData;
 
 class Products with ChangeNotifier {
   List<Product> _items = [
-    Product(
+    /* Product(
       id: 'p1',
       title: 'Red Shirt',
       description: 'A red shirt - it is pretty red!',
@@ -34,11 +38,34 @@ class Products with ChangeNotifier {
       price: 49.99,
       imageUrl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
+    ), */
   ];
 
   List<Product> get items {
+    print(_items.length);
     return [..._items];
+  }
+
+  Future<void> getAndSetProducts() async {
+    try {
+      final response = await http.get(urlData.url);
+      final productData = json.decode(response.body) as Map<String, dynamic>;
+      if (productData == null) {
+        return;
+      }
+      final List<Product> productList = [];
+      productData.forEach((key, value) {
+        productList.add(Product(
+            description: value['description'],
+            id: key,
+            imageUrl: value['imageUrl'],
+            price: value['price'],
+            title: value['title']));
+      });
+      _items = productList;
+      print(_items);
+      notifyListeners();
+    } catch (error) {}
   }
 
   Product prodById(String id) {
@@ -49,25 +76,61 @@ class Products with ChangeNotifier {
     return _items.where((item) => item.isFavourite).toList();
   }
 
-  void addProduct(Product product) {
-    var newProduct = Product(
-        description: product.description,
-        id: DateTime.now().toString(),
-        imageUrl: product.imageUrl,
-        price: product.price,
-        title: product.title);
-    _items.add(newProduct);
-    notifyListeners();
+  Future<void> addProduct(Product product) async {
+    try {
+      final response = await http.post(urlData.url,
+          body: json.encode({
+            'title': product.title,
+            'description': product.description,
+            'price': product.price,
+            'imageUrl': product.imageUrl,
+          }));
+
+      final newProduct = Product(
+          description: product.description,
+          id: json.decode(response.body)['name'],
+          imageUrl: product.imageUrl,
+          price: product.price,
+          title: product.title);
+      _items.add(newProduct);
+    } catch (error) {
+      throw (error);
+    } finally {
+      notifyListeners();
+    }
   }
 
-  void updateProduct(String id, Product product) {
+  Future<void> updateProduct(String id, Product product) async {
+    print(urlData.urlProdId.replaceAll('PRODID', id));
+    await http.patch(urlData.urlProdId.replaceAll('PRODID', id),
+        body: json.encode({
+          'title': product.title,
+          'description': product.description,
+          'price': product.price,
+          'imageUrl': product.imageUrl,
+        }));
+
     var prodIndex = _items.indexWhere((element) => element.id == id);
+
     _items[prodIndex] = product;
     notifyListeners();
   }
 
-  void deleteProduct(String id) {
+  Future<void> deleteProduct(String id) async {
+    var deltedItemIndex = _items.indexWhere((element) => element.id == id);
+    var deltedItem = _items.elementAt(deltedItemIndex);
     _items.removeWhere((element) => element.id == id);
     notifyListeners();
+    print(urlData.urlProdId.replaceAll('PRODID', id));
+    final response =
+        await http.delete(urlData.urlProdId.replaceAll('PRODID', id));
+    print((response.statusCode).toString());
+    if (response.statusCode >= 400) {
+      print('object');
+      _items.insert(deltedItemIndex, deltedItem);
+      notifyListeners();
+
+      throw HttpException('Could not delete product.');
+    }
   }
 }
