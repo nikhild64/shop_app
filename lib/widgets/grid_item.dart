@@ -28,6 +28,17 @@ class GridItem extends StatelessWidget {
           leading: IconButton(
             onPressed: () {
               cart.addToCart(product);
+              Scaffold.of(context).hideCurrentSnackBar();
+
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text('Product Added to the Cart!'),
+                action: SnackBarAction(
+                  label: 'Undo',
+                  onPressed: () {
+                    cart.removeLatest(product);
+                  },
+                ),
+              ));
             },
             icon: Icon(Icons.shopping_cart),
             color: Theme.of(context).accentColor,
