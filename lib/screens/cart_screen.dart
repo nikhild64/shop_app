@@ -29,9 +29,33 @@ class CartScreen extends StatelessWidget {
                   ),
                   RaisedButton(
                       onPressed: () {
-                        Provider.of<Order>(context, listen: false).orderNow(
-                            cart.items.values.toList(), cart.cartAmount);
-                        cart.clearCart();
+                        showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return AlertDialog(
+                                title: Text('Are you sure?'),
+                                content: Text(
+                                    'Your order will be created, do you want to continue'),
+                                actions: [
+                                  FlatButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                      },
+                                      child: Text('Yes')),
+                                  FlatButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                      child: Text('No'))
+                                ],
+                              );
+                            }).then((value) {
+                          if (value) {
+                            Provider.of<Order>(context, listen: false).orderNow(
+                                cart.items.values.toList(), cart.cartAmount);
+                            cart.clearCart();
+                          }
+                        });
                       },
                       child: Text(
                         'Order Now',
