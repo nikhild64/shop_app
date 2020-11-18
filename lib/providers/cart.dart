@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'product.dart';
 
 class CardItem {
@@ -19,12 +18,15 @@ class Cart with ChangeNotifier {
 
   void addToCart(Product product) {
     if (_items.containsKey(product.id)) {
-      _items.updateAll((key, value) => CardItem(
-            id: value.id,
-            price: value.price,
-            quantity: value.quantity + 1,
-            title: value.title,
-          ));
+      _items.update(
+        product.id,
+        (existingCartItem) => CardItem(
+          id: existingCartItem.id,
+          title: existingCartItem.title,
+          price: existingCartItem.price,
+          quantity: existingCartItem.quantity + 1,
+        ),
+      );
     } else {
       _items.putIfAbsent(
           product.id,

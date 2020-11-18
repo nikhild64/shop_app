@@ -42,7 +42,6 @@ class Products with ChangeNotifier {
   ];
 
   List<Product> get items {
-    print(_items.length);
     return [..._items];
   }
 
@@ -58,12 +57,13 @@ class Products with ChangeNotifier {
         productList.add(Product(
             description: value['description'],
             id: key,
+            isFavourite:
+                value['isFavourite'] == null ? false : value['isFavourite'],
             imageUrl: value['imageUrl'],
             price: value['price'],
             title: value['title']));
       });
       _items = productList;
-      print(_items);
       notifyListeners();
     } catch (error) {}
   }
@@ -101,7 +101,6 @@ class Products with ChangeNotifier {
   }
 
   Future<void> updateProduct(String id, Product product) async {
-    print(urlData.urlProdId.replaceAll('PRODID', id));
     await http.patch(urlData.urlProdId.replaceAll('PRODID', id),
         body: json.encode({
           'title': product.title,
@@ -121,12 +120,9 @@ class Products with ChangeNotifier {
     var deltedItem = _items.elementAt(deltedItemIndex);
     _items.removeWhere((element) => element.id == id);
     notifyListeners();
-    print(urlData.urlProdId.replaceAll('PRODID', id));
     final response =
         await http.delete(urlData.urlProdId.replaceAll('PRODID', id));
-    print((response.statusCode).toString());
     if (response.statusCode >= 400) {
-      print('object');
       _items.insert(deltedItemIndex, deltedItem);
       notifyListeners();
 

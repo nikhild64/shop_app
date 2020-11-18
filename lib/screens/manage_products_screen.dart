@@ -34,10 +34,7 @@ class ManageProductsScreen extends StatelessWidget {
         onRefresh: () {
           return Provider.of<Products>(context, listen: false)
               .getAndSetProducts()
-              .then((value) => print('value'))
-              .catchError((error) {
-            print(error);
-          });
+              .catchError((error) {});
         },
         child: ListView.builder(
             itemCount: products.length,
