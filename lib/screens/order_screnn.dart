@@ -18,7 +18,6 @@ class _OrderScreenState extends State<OrderScreen> {
     setState(() {
       _isloading = true;
     });
-    // TODO: implement initState
     Provider.of<Order>(context, listen: false)
         .getAndSetOrders()
         .then((value) => setState(() {

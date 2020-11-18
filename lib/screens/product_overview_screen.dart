@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/widgets/main_drawer.dart';
 import '../widgets/badge.dart';
-import '../providers/product.dart';
 import '../widgets/grid_item.dart';
 import '../providers/products.dart';
 import './product_details_screen.dart';
@@ -87,30 +86,34 @@ class _ProductsOverviewState extends State<ProductsOverview> {
         ],
       ),
       drawer: MainDrawer(),
-      body: GridView.builder(
-        itemBuilder: (ctx, index) {
-          return InkWell(
-            splashColor: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(15),
-            onTap: () {
-              Navigator.of(context).pushNamed(ProductDetail.routeName,
-                  arguments: products[index].id);
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: ChangeNotifierProvider.value(
-                  value: products[index], child: GridItem()),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : GridView.builder(
+              itemBuilder: (ctx, index) {
+                return InkWell(
+                  splashColor: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(15),
+                  onTap: () {
+                    Navigator.of(context).pushNamed(ProductDetail.routeName,
+                        arguments: products[index].id);
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: ChangeNotifierProvider.value(
+                        value: products[index], child: GridItem()),
+                  ),
+                );
+              },
+              itemCount: products.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 3 / 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
             ),
-          );
-        },
-        itemCount: products.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 3 / 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-      ),
     );
   }
 }
